@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { usePembicaraStore } from "../../../stores/pembicaraStore"; // Import store pembicara
+import { usePembicaraStore } from "../../../stores/pembicaraStore";
 
 function Avatar({ name }: { name: string }) {
   const initials = name
@@ -18,19 +18,28 @@ function Avatar({ name }: { name: string }) {
 }
 
 export default function PembicaraIndex() {
-  // Ambil state dan fungsi dari Zustand Store pembicara
-  const { pembicaraList, loading, fetchPembicara, deletePembicara } = usePembicaraStore();
+  const {
+    pembicaraList,
+    loading,
+    fetchPembicara,
+    deletePembicara,
+  } = usePembicaraStore();
 
-  // Ambil data asli dari cloud database saat komponen pertama kali dimuat
   useEffect(() => {
     fetchPembicara();
-  }, [fetchPembicara]);
+  }, []);
 
-  // Fungsi untuk menangani penghapusan data pembicara
-  const handleDelete = async (id: number, namaPembicara: string) => {
-    const confirmDelete = window.confirm(`Apakah Anda yakin ingin menghapus pembicara "${namaPembicara}"?`);
+  const handleDelete = async (
+    id: number,
+    namaPembicara: string
+  ) => {
+    const confirmDelete = window.confirm(
+      `Apakah Anda yakin ingin menghapus pembicara "${namaPembicara}"?`
+    );
+
     if (confirmDelete) {
       const success = await deletePembicara(id);
+
       if (success) {
         alert("Pembicara berhasil dihapus.");
       } else {
@@ -48,6 +57,7 @@ export default function PembicaraIndex() {
           <h1 className="text-2xl font-bold text-[#7B1D3F]">
             Pembicara
           </h1>
+
           <p className="text-sm text-gray-400">
             Kelola pembicara event
           </p>
@@ -64,21 +74,21 @@ export default function PembicaraIndex() {
       {/* TABLE */}
       <div className="bg-white rounded-2xl shadow-lg p-4">
 
-        {/* LOADING INDICATOR */}
+        {/* LOADING */}
         {loading && (
           <div className="text-center py-6 text-sm text-gray-500">
-            Sedang memuat data pembicara dari cloud database...
+            Sedang memuat data pembicara...
           </div>
         )}
 
         {/* DATA KOSONG */}
         {!loading && pembicaraList.length === 0 && (
           <div className="text-center py-6 text-sm text-gray-400">
-            Belum ada data pembicara yang tersedia.
+            Belum ada data pembicara.
           </div>
         )}
 
-        {/* DATA TABEL UTAMA */}
+        {/* TABEL */}
         {!loading && pembicaraList.length > 0 && (
           <table className="w-full text-sm">
 
@@ -92,8 +102,11 @@ export default function PembicaraIndex() {
             </thead>
 
             <tbody>
-              {pembicaraList.map((item, index) => (
-                <tr key={item.id} className="hover:bg-gray-50">
+              {pembicaraList.map((item: any, index: number) => (
+                <tr
+                  key={item.id}
+                  className="hover:bg-gray-50"
+                >
 
                   <td className="px-4 py-4 text-gray-400">
                     {index + 1}
@@ -101,10 +114,15 @@ export default function PembicaraIndex() {
 
                   <td className="px-4 py-4">
                     <div className="flex items-center gap-3">
-                      <Avatar name={item.nama} />
+
+                      <Avatar
+                        name={item.nama || "Unknown"}
+                      />
+
                       <span className="font-semibold text-[#1a0a10]">
                         {item.nama}
                       </span>
+
                     </div>
                   </td>
 
@@ -116,19 +134,26 @@ export default function PembicaraIndex() {
 
                   <td className="px-4 py-4">
                     <div className="flex gap-2">
-                      {/* Tombol Edit diubah menjadi Link dinamis sesuai ID pembicara */}
-                      <Link 
+
+                      <Link
                         to={`/dashboard/pembicara/edit/${item.id}`}
                         className="px-3 py-1 text-xs rounded-md bg-yellow-100 text-yellow-700 hover:bg-yellow-200 text-center flex items-center"
                       >
                         Edit
                       </Link>
-                      <button 
-                        onClick={() => handleDelete(item.id, item.nama)}
+
+                      <button
+                        onClick={() =>
+                          handleDelete(
+                            Number(item.id),
+                            item.nama
+                          )
+                        }
                         className="px-3 py-1 text-xs rounded-md bg-red-100 text-red-600 hover:bg-red-200"
                       >
                         Hapus
                       </button>
+
                     </div>
                   </td>
 
