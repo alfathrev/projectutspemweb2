@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { usePembicaraStore } from "../../../stores/pembicaraStore";
+import { usePembicaraStore } from "../../../stores/PembicaraStore";
 
 function Avatar({ name }: { name: string }) {
   const initials = name
