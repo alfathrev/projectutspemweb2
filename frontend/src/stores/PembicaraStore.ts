@@ -17,7 +17,7 @@ interface PembicaraState {
   updatePembicara: (id: number, formData: Omit<PembicaraData, "id">) => Promise<boolean>;
 }
 
-const API_URL = "http://localhost:3000/speakers";
+const API_URL = "https://projectutspemweb2-production.up.railway.app/speakers";
 
 export const usePembicaraStore = create<PembicaraState>((set, get) => ({
   pembicaraList: [],
